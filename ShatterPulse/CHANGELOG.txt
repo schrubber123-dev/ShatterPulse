@@ -1,0 +1,15 @@
+ShatterPulse 1.0.0 - Initial Public Release
+
+- Renamed the project from the pre-release name IceLanceHelper to ShatterPulse.
+- Frozen target tracking for Frost Nova, Frostbite, Freeze and configured hard-freeze auras.
+- Fingers of Frost tracking with a separate top proc indicator.
+- Retail-inspired split frost overlay.
+- Adjustable glow, opacity, scale, spacing, flash speed and flash strength.
+- Optional Ice Lance icon display modes.
+- Five bundled frost proc sounds.
+- Separate sound toggles for freeze and Fingers of Frost.
+- Minimap configuration button.
+- Preview modes for Frozen, FoF and Both.
+- Blizzard-style settings window with General, Visuals, Sounds, Preview and FAQ / About pages.
+- FAQ and diagnostics included.
+- Created by Schrubber.
