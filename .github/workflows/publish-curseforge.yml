@@ -1,0 +1,99 @@
+name: Publish ShatterPulse
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build and validate only (no upload)'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  package-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      CF_API_TOKEN: ${{ secrets.CF_API_KEY }}
+      CF_PROJECT_ID: ${{ vars.CF_PROJECT_ID }}
+      GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate release configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! [[ "$CF_PROJECT_ID" =~ ^[0-9]+$ ]]; then
+            echo "::error::Set the numeric CF_PROJECT_ID repository variable before releasing."
+            exit 1
+          fi
+          if [[ "$GITHUB_EVENT_NAME" == "push" || "${{ inputs.dry_run }}" == "false" ]]; then
+            if [[ -z "$CF_API_TOKEN" ]]; then
+              echo "::error::Missing CF_API_KEY GitHub Actions secret."
+              exit 1
+            fi
+          fi
+
+      - name: Restore bundled sounds and textures
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Binary media is stored separately from the public Lua source.
+          # Upload the supplied ShatterPulse-Media.zip once to the repository root.
+          if [[ -f ShatterPulse-Media.zip ]]; then
+            python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          archive = Path("ShatterPulse-Media.zip")
+          required = {
+              "FrostSide.tga", "FrostTop.tga", "Crystal.ogg",
+              "IceCrack.ogg", "FrostChime.ogg", "SharpPing.ogg", "FrostWhoosh.ogg",
+          }
+          target = Path("ShatterPulse/Media")
+          target.mkdir(parents=True, exist_ok=True)
+          with ZipFile(archive) as z:
+              entries = {Path(name).name: name for name in z.namelist()
+                         if name.startswith("Media/") and not name.endswith("/")}
+              missing = required - entries.keys()
+              if missing:
+                  raise SystemExit("Missing media: " + ", ".join(sorted(missing)))
+              for name in sorted(required):
+                  data = z.read(entries[name])
+                  if not data:
+                      raise SystemExit("Empty media: " + name)
+                  (target / name).write_bytes(data)
+          print("Verified all seven bundled media files.")
+          PY
+          fi
+          for file in FrostSide.tga FrostTop.tga Crystal.ogg IceCrack.ogg FrostChime.ogg SharpPing.ogg FrostWhoosh.ogg; do
+            if [[ ! -s "ShatterPulse/Media/$file" ]]; then
+              echo "::error::Missing ShatterPulse/Media/$file. Upload ShatterPulse-Media.zip first."
+              exit 1
+            fi
+          done
+
+      - name: Prepare packager working directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s ShatterPulse/ShatterPulse.lua
+          test -s ShatterPulse/ShatterPulse.toc
+          cp -a ShatterPulse/. ./
+          rm -rf ShatterPulse
+          rm -f ShatterPulse-Media.zip
+          test -s ShatterPulse.lua
+          test -s ShatterPulse.toc
+
+      - name: Package and publish
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -p ${{ vars.CF_PROJECT_ID }} ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '-d' || '' }}
