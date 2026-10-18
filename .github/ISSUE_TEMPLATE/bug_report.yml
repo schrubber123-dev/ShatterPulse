@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a problem with ShatterPulse
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve ShatterPulse.
+  - type: input
+    id: version
+    attributes:
+      label: ShatterPulse version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: build
+    attributes:
+      label: WoW Forever build
+      placeholder: "1.60.1.xxxxx"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected feature
+      options:
+        - Frozen / Shatter detection
+        - Fingers of Frost
+        - Visual overlay
+        - Sound
+        - Settings UI
+        - Minimap button
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Tell us what you expected and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Lua error
+      description: Paste the full Lua error here if one was shown.
+      render: text
