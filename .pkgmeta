@@ -1,0 +1,12 @@
+package-as: ShatterPulse
+
+ignore:
+  - README.md
+  - CHANGELOG.md
+  - LICENSE
+  - ShatterPulse-Media.zip
+  - PUBLISHING.md
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
