@@ -1,0 +1,41 @@
+name: Hydrate repository assets
+
+on:
+  push:
+    paths:
+      - 'encoded-src/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  hydrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Decode source and media
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ShatterPulse media-src assets
+          cat encoded-src/lua/lua.part-* | base64 --decode > ShatterPulse/ShatterPulse.lua
+          cat encoded-src/media/media.part-* | base64 --decode > media-src/Media.zip
+          cat encoded-src/logo/logo.part-* | base64 --decode > assets/shatterpulse-logo.jpg
+
+          # Validate that the reconstructed media archive is usable.
+          unzip -tq media-src/Media.zip
+          test -s ShatterPulse/ShatterPulse.lua
+          test -s assets/shatterpulse-logo.jpg
+
+      - name: Commit hydrated files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -r encoded-src
+          git add ShatterPulse/ShatterPulse.lua media-src/Media.zip assets/shatterpulse-logo.jpg
+          git commit -m "Add ShatterPulse source and bundled media"
+          git push
