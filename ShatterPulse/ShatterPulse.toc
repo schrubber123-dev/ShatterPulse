@@ -1,0 +1,9 @@
+## Interface: 16001
+## Title: ShatterPulse
+## Notes: Blizzard-style Frozen, Shatter and Fingers of Frost proc alerts for Frost Mages in WoW Forever.
+## Author: Schrubber
+## Version: 1.0.0
+## SavedVariables: ShatterPulseDB
+## IconTexture: Interface\Icons\Spell_Frost_FrostBlast
+
+ShatterPulse.lua
