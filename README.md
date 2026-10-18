@@ -1,37 +1,53 @@
-<p align="center">
-  <img src="assets/shatterpulse-logo.jpg" alt="ShatterPulse" width="360">
-</p>
-
 # ShatterPulse
+
+[![CurseForge](https://img.shields.io/badge/CurseForge-Download-F16436?logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/shatterpulse)
+![WoW Forever](https://img.shields.io/badge/WoW-Forever-4A90E2)
+![Version](https://img.shields.io/badge/version-1.0.0-7ACBFF)
 
 **Blizzard-style Frozen, Shatter and Fingers of Frost proc alerts for Frost Mages in WoW Forever.**
 
 Created by **Schrubber**.
 
-[CurseForge page](https://www.curseforge.com/wow/addons/shatterpulse)
+## Download
 
-## What it does
+The official installable build, including the bundled frost textures and sounds, is available on CurseForge:
 
-ShatterPulse gives Frost Mages a clear visual and audio cue when a Shatter opportunity is available.
+**https://www.curseforge.com/wow/addons/shatterpulse**
 
-- **Frozen target:** two frost arcs appear to the left and right of your character.
-- **Fingers of Frost:** a separate frost crown appears above your character.
-- **Both active:** all three indicators can appear together.
-- **Exact freeze state:** the Frozen overlay disappears with the actual freeze aura rather than using a guessed Frost Nova timer.
-- **Optional sounds:** five bundled frost-themed proc sounds can be used for Freeze and/or Fingers of Frost.
+> The GitHub repository is the development/source repository. Use the CurseForge package for normal installation because the binary artwork and audio files are distributed with the packaged addon.
+
+## Features
+
+- **Frozen target indicator** — frost arcs appear to the left and right of your character.
+- **Fingers of Frost indicator** — a separate frost crown appears above your character.
+- **Combined state** — both indicators can be visible at the same time.
+- **Aura-driven Frozen state** — the overlay disappears when the actual freeze aura disappears; no guessed Frost Nova timer.
+- **Five frost-themed proc sounds** — Crystal, Ice Crack, Frost Chime, Sharp Ping and Frost Whoosh.
+- **Separate sound toggles** for Freeze and Fingers of Frost.
+- **Adjustable visuals** — scale, spacing, FoF height, opacity, glow intensity, flash speed and flash strength.
+- **Optional Ice Lance icon modes.**
+- **Minimap configuration button.**
+- **Preview modes** for Frozen, FoF and Both.
+- **Blizzard-style settings window** with General, Visuals, Sounds, Preview and FAQ / About pages.
 
 ## Visual styles
 
-- Retail Split Overlay *(recommended)*
-- Split + Ice Lance
-- Clean Ice Lance
-- Ice Lance + Glow
+- **Retail Split Overlay** *(recommended)*
+- **Split + Ice Lance**
+- **Clean Ice Lance**
+- **Ice Lance + Glow**
 
-You can adjust overlay scale, side spacing, FoF height, opacity, glow intensity, flash speed and flash strength from the in-game menu.
+### Proc logic
+
+| State | Display |
+| --- | --- |
+| Target Frozen | Left + right frost arcs |
+| Fingers of Frost | Frost crown above character |
+| Both | Side arcs + top crown |
 
 ## Sounds
 
-ShatterPulse includes five bundled sounds:
+The packaged addon contains five selectable sounds:
 
 - Crystal
 - Ice Crack
@@ -39,27 +55,19 @@ ShatterPulse includes five bundled sounds:
 - Sharp Ping
 - Frost Whoosh
 
-The selected sound can trigger on hard-freeze auras and optionally on Fingers of Frost.
+The selected sound can trigger on a hard freeze and optionally on Fingers of Frost.
 
 ## Installation
 
-### CurseForge
+For players, install the current release from the [CurseForge project page](https://www.curseforge.com/wow/addons/shatterpulse).
 
-The easiest option is the [ShatterPulse CurseForge page](https://www.curseforge.com/wow/addons/shatterpulse).
+If you used one of the early development versions, remove the old `IceLanceHelper` folder before installing ShatterPulse.
 
-### Manual install
-
-1. Download a release ZIP from GitHub.
-2. Extract it.
-3. Copy the `ShatterPulse` folder to:
+The addon folder belongs in:
 
 ```text
-World of Warcraft/_classic_beta_/Interface/AddOns/
+World of Warcraft/_classic_beta_/Interface/AddOns/ShatterPulse/
 ```
-
-4. Reload or restart WoW Forever.
-
-If you used an early development build, remove the old `IceLanceHelper` folder first.
 
 ## Commands
 
@@ -71,6 +79,7 @@ If you used an early development build, remove the old `IceLanceHelper` folder f
 /sp test off
 /sp move
 /sp lock
+
 /sp sound crystal
 /sp sound crack
 /sp sound chime
@@ -79,51 +88,64 @@ If you used an early development build, remove the old `IceLanceHelper` folder f
 /sp soundtest
 /sp freezesound
 /sp fofsound
+
 /sp style split
 /sp style clean
 /sp style blizzard
 /sp style combo
+
 /sp overlay 1.0
 /sp size 82
 /sp alpha 0.9
 /sp flash 1.2
 /sp strength 1.4
 /sp glow 1.5
+
 /sp status
 ```
 
-`/shatterpulse` can be used instead of `/sp`.
+You can use `/shatterpulse` instead of `/sp`.
 
 ## WoW Forever compatibility
 
-WoW Forever restricts some combat and enemy-aura information. ShatterPulse uses Blizzard-safe proc events and AuraContainer tracking rather than restricted combat-log tricks.
+ShatterPulse was built specifically for **WoW Forever** and currently targets **Interface 16001**.
 
-The addon currently targets **Interface 16001**.
+WoW Forever restricts some enemy-aura and combat information. ShatterPulse therefore uses Blizzard-safe proc events and AuraContainer tracking rather than restricted combat-log workarounds.
 
-Because WoW Forever is still changing, spell IDs or API behavior may change between builds. If something breaks, please open a GitHub issue and include:
+Because Forever is still evolving, spell IDs and API behavior can change between builds. If something stops working after an update, please open a bug report and include:
 
 - ShatterPulse version
 - WoW Forever build
 - which proc did not work
 - any Lua error shown by the client
 
-## Development
+## Repository structure
 
-The Lua source lives in the `ShatterPulse/` folder. To keep the repository compact, bundled binary media is stored as `media-src/Media.zip`.
+```text
+ShatterPulse/
+├── ShatterPulse.lua
+├── ShatterPulse.toc
+├── README.txt
+└── CHANGELOG.txt
 
-Before testing a clone locally, run:
+.github/
+└── ISSUE_TEMPLATE/
 
-```bash
-./scripts/prepare-media.sh
+README.md
+CHANGELOG.md
+LICENSE
 ```
 
-This extracts the required textures and sounds into `ShatterPulse/Media/`.
+The source repository intentionally does not include the packaged binary frost textures and audio files. Those are included in the official CurseForge download.
 
-Creating a Git tag such as `v1.0.1` triggers the included GitHub Actions workflow. The workflow prepares the media automatically, builds an installable `ShatterPulse-1.0.1.zip`, and publishes it as a GitHub Release.
+## Feedback
+
+Use GitHub Issues for bug reports, Forever compatibility problems, feature requests, proc-detection problems and UI suggestions.
 
 ## Credits
 
-**Created by Schrubber**  
+**Created by Schrubber**
+
 Built for the WoW Forever Frost Mage community.
 
 ShatterPulse is an independent community addon and is not affiliated with or endorsed by Blizzard Entertainment.
